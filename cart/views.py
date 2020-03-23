@@ -1,5 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from cart.models import Product, Order
 
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    products = Product.objects.all()
+    if request.method == 'POST':
+        return redirect('/')
+    orders = Order.objects.all()
+    return render(request, 'home.html', {'products':products, 'orders':orders})

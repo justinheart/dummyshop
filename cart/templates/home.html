@@ -4,13 +4,120 @@
         <meta charset="utf-8">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-
+        <!-- Font Awesome icons CSS -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+        <style type="text/css"> 
+            .btn-circle {
+                padding: 7px 10px; 
+                border-radius: 25px; 
+                font-size: 10px; 
+                text-align: center; 
+            }
+            .btn-top-3 {
+                border: 1px solid black;
+                margin-top: 50px;
+                margin-bottom: 50px;
+                padding: 10px 50px;
+                border-radius: 50px;
+            }
+        </style>
         <title>Cart - Dummy Shop</title>
     </head>
     <body>
-        <div class="col-md-12">
-            <h1 class="text-center">請選擇商品下單</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="col-md-12">
+                <h1 class="text-center">請選擇商品下單</h1>
+            </div>
+            <div class="col-md-12 row">
+                <div class="col-md-4">
+                    <select id="products_select" name="product_list" class="form-control">
+                    {% for product in products %}
+                        <option value="{{product.product_id}}" {% if product == current_product %} selected="selected" {% endif %}>
+                            商品 {{product.product_id}}
+                        </option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4 row">
+                    <div class="col-md-8">
+                        <input id="product_qty_input" name="product_qty" type="number" class="form-control" placeholder="輸入數量" value="" min="1"/>
+                    </div>
+                    <div class="col-md-4" style="line-height: 35px;">
+                        <button type="submit" class="btn btn-info btn-circle"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="col-md-12">
+                        <input id="customer_id_input" name="customer_id" type="string" class="form-control" placeholder="輸入 Customer Id" value=""/>
+                    </div>
+                    <div class="col-md-12">
+                        <input id="is_vip_checkbox" name="is_vip" type="checkbox"/>
+                        <label class="form-check-label" for="is_vip_checkbox">是否為 VIP 身份</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div class="col-md-10">
+            <h2>商品列表</h2>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>商品 ID</th>
+                        <th>商品庫存數量</th>
+                        <th>商品單價</th>
+                        <th>商品所屬館別</th>
+                        <th>VIP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{product.product_id}}</td>
+                            <td>{{product.stock_pcs}}</td>
+                            <td>{{product.price}}</td>
+                            <td>{{product.shop_id}}</td>
+                            <td>{{product.vip}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-10">
+            <h2>訂單記錄</h2>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>訂單 ID</th>
+                        <th>商品 ID</th>
+                        <th>購買數量</th>
+                        <th>商品單價</th>
+                        <th>商品所屬館別</th>
+                        <th>Customer ID</th>
+                        <th>動作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{order.order_id}}</td>
+                            <td>{{order.product_id}}</td>
+                            <td>{{order.qty}}</td>
+                            <td>{{order.price}}</td>
+                            <td>{{order.shop_id}}</td>
+                            <td>{{order.customer_id}}</td>
+                            <td>
+                                <button id="{{product.product_id}}" type="button" class="btn btn-info btn-circle"><i class="fas fa-minus"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4">
+            <button type="button" class="btn btn-default btn-top-3">TOP 3</button>
         </div>
 
         <!-- jQuery first, Popper.js, Bootstrap JS -->
